@@ -8,13 +8,13 @@ namespace TobaccoCompanyWPF.Views.Windows
         public MainWindow()
         {
             InitializeComponent();
-            this.DataContext = new MainPresenter()
-            {
-                OpenWindowAction = () => this.Show(),
-                HideWindowAction = () => this.Hide(),
-                MinimizeWindowAction = () => SystemCommands.MinimizeWindow(this),
-                CloseWindowAction = () => SystemCommands.CloseWindow(this),
-            };
+            //this.DataContext = new MainPresenter()
+            //{
+            //    OpenWindowAction = () => this.Show(),
+            //    HideWindowAction = () => this.Hide(),
+            //    MinimizeWindowAction = () => SystemCommands.MinimizeWindow(this),
+            //    CloseWindowAction = () => SystemCommands.CloseWindow(this),
+            //};
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)

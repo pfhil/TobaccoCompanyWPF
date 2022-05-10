@@ -14,7 +14,9 @@ namespace TobaccoCompanyWPF.Models.Entity
 
         public decimal Price { get; set; }
 
-        public int Unit { get; set; }
+        public string? Description { get; set; }
+
+        public string? FileName { get; set; }
 
         public List<Order> Orders { get; set; } = new();
 
@@ -24,10 +26,5 @@ namespace TobaccoCompanyWPF.Models.Entity
 
         public List<Invoice> Invoices { get; set; } = new();
 
-    }
-
-    internal enum Units
-    {
-        Pack
     }
 }

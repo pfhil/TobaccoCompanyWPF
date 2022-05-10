@@ -1,12 +1,11 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using TobaccoCompanyWPF.Models;
 
 namespace TobaccoCompanyWPF.ViewModels.MVVM
 {
-    public abstract class PresenterBase : INotifyPropertyChanged
+    public abstract class BaseWindowViewModel : BaseViewModel
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-
         public Action? MinimizeWindowAction { get; set; }
         public Action? CloseWindowAction { get; set; }
         public Action? OpenWindowAction { get; set; }

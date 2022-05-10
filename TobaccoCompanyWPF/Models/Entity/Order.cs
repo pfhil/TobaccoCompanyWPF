@@ -12,46 +12,45 @@ namespace TobaccoCompanyWPF.Models.Entity
 
         public User Client { get; set; }
 
-        public Courier? Courier { get; set; }
-
         public string? Address { get; set; }
 
         public DateTime Date { get; set; }
 
-        public DateTime? DateOrderReceipt { get; set; }
+        public DateTime? DateReceived { get; set; }
 
-        public bool IsPaid { get; set; }
+        public DateTime? RealDateReceived { get; set; }
 
-        public bool ProductIsReceived { get; set; }
+        public bool UserMarkIsPaid { get; set; }
+
+        public bool UserMarkProductIsReceived { get; set; }
+
+        public bool ManagerMarkIsPaid { get; set; }
+
+        public bool ManagerMarkProductIsReceived { get; set; }
 
         public PaymentType PaymentType { get; set; }
 
-        public TypeDelivery TypeDelivery { get; set; }
-
-        public StateOrder StateOrder { get; set; }
+        public ReceivingMethod ReceivingMethod { get; set; }
 
         public List<Product> Products { get; set; } = new();
 
-        public List<CashReceipt> CashReceipts { get; set; }
+        public List<CashReceipt> CashReceipts { get; set; } = new();
 
     }
 
     public enum PaymentType
     {
+        [Description("Наличными")]
         Cash,
+        [Description("Банковской картой")]
         BankCard
     }
 
-    public enum TypeDelivery
+    public enum ReceivingMethod
     {
-        Courier,
+        [Description("Доставка")]
+        Delivery,
+        [Description("Самовывоз")]
         Pickup
-    }
-
-    public enum StateOrder
-    {
-        Delivered,
-        AwaitingReceipt,
-        Executed
     }
 }

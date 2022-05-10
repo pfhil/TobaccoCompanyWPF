@@ -4,17 +4,23 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TobaccoCompanyWPF.Views.Windows"
+        mc:Ignorable="d"
+        
+        xmlns:pages="clr-namespace:TobaccoCompanyWPF.Views.Pages"
+        
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:viewModels="clr-namespace:TobaccoCompanyWPF.ViewModels"
         xmlns:controls="clr-namespace:TobaccoCompanyWPF.Views.Controls"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        xmlns:myAssistants="clr-namespace:TobaccoCompanyWPF.Views.Assistants"
-        mc:Ignorable="d"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        d:DataContext="{d:DesignInstance Type=viewModels:MainViewModel}"
+        
+        Template="{StaticResource mainWindowTemplate}"
+        
         AllowsTransparency="True" WindowStyle="None" Background="Transparent"
         ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
-        Template="{StaticResource mainWindowTemplate}"
         MouseDown="Window_MouseDown"
-        d:DataContext="{d:DesignInstance Type=viewModels:MainPresenter}"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="600" Width="1000" FontSize="16">
     <Window.Resources>
         <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource MaterialDesignTreeViewItem}">
             <Setter Property="Padding" Value="33,18,8,18" />
@@ -23,23 +29,37 @@
                     <Setter Property="Padding" Value="0,18,8,18" />
                 </Trigger>
             </Style.Triggers>
+            <Style.Resources>
+                <Style TargetType="TextBlock" BasedOn="{StaticResource MaterialDesignBody1TextBlock}">
+                    <Setter Property="Padding" Value="7,0,0,0"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                </Style>
+            </Style.Resources>
         </Style>
-
         <!--<local:RoleToVisibilityConverter x:Key="RoleToVisibilityConverter"/>-->
-
     </Window.Resources>
+
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.3*"></ColumnDefinition>
+            <ColumnDefinition MinWidth="10" Width="0.35*"></ColumnDefinition>
             <ColumnDefinition Width="auto"></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <TreeView Grid.Column="0" Background="#a7ccc6" FontSize="15">
+        <TreeView Grid.Column="0" Background="#a7ccc6">
             <TreeViewItem>
+
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Selected">
+                        <i:InvokeCommandAction
+                                Command="{Binding NavigateCatalogCommand}">
+                        </i:InvokeCommandAction>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+
                 <TreeViewItem.Header>
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="Marketplace" Width="20" Height="20" />
-                        <TextBlock Padding="7,0,0,0" VerticalAlignment="Center">Каталог</TextBlock>
+                        <TextBlock Text="Каталог"></TextBlock>
                     </StackPanel>
                 </TreeViewItem.Header>
             </TreeViewItem>
@@ -48,27 +68,55 @@
                     Продукция
                 </TreeViewItem.Header>
                 <TreeViewItem>
+
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Selected">
+                            <i:InvokeCommandAction
+                                Command="{Binding NavigateConsignmentsCommand}">
+                            </i:InvokeCommandAction>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+
                     <TreeViewItem.Header>
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="VanCandy" Width="20" Height="20" />
-                            <TextBlock Padding="7,0,0,0" VerticalAlignment="Center">Поступление</TextBlock>
+                            <TextBlock Text="Поступления"></TextBlock>
                         </StackPanel>
                     </TreeViewItem.Header>
                 </TreeViewItem>
                 <TreeViewItem>
+
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Selected">
+                            <i:InvokeCommandAction
+                                Command="{Binding NavigateProductsCommand}">
+                            </i:InvokeCommandAction>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+
                     <TreeViewItem.Header>
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="Edit" Width="20" Height="20" />
-                            <TextBlock Padding="7,0,0,0" VerticalAlignment="Center">Редактировать</TextBlock>
+                            <TextBlock Text="Изменить"></TextBlock>
                         </StackPanel>
                     </TreeViewItem.Header>
                 </TreeViewItem>
-                    <!--Visibility="{Binding Source={x:Static Threading:Thread.CurrentPrincipal}, Converter={StaticResource RoleToVisibilityConverter}, ConverterParameter=Administrator}"-->
+                <!--Visibility="{Binding Source={x:Static Threading:Thread.CurrentPrincipal}, Converter={StaticResource RoleToVisibilityConverter}, ConverterParameter=Administrator}"-->
             </TreeViewItem>
             <TreeViewItem Header="Заказы">
-                <TreeViewItem Header="Все заказы" />
-                <TreeViewItem Header="Оформить заказ" />
+                <TreeViewItem Header="Оформить заказ">
+
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Selected">
+                            <i:InvokeCommandAction
+                                Command="{Binding NavigatePlaceOrderCommand}">
+                            </i:InvokeCommandAction>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+
+                </TreeViewItem>
                 <TreeViewItem Header="Мои заказы" />
+                <TreeViewItem Header="Все заказы" />
             </TreeViewItem>
             <TreeViewItem Header="Аккаунт">
                 <TreeViewItem Header="Редактировать" />
@@ -77,7 +125,38 @@
         </TreeView>
         <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3"
         HorizontalAlignment="Center" VerticalAlignment="Stretch" />
-        <!--<Frame Grid.Column="2" Source="Page1.xaml"></Frame>-->
+        
+        <ContentControl Grid.Column="2" Content="{Binding CurrentViewModel}">
+            <ContentControl.Resources>
+                <DataTemplate DataType="{x:Type viewModels:ProductsViewModel}">
+                    <pages:ProductsView/>
+                </DataTemplate>
+                
+                <DataTemplate DataType="{x:Type viewModels:ProductCreateViewModel}">
+                    <pages:ProductCreateView/>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type viewModels:ProductEditViewModel}">
+                    <pages:ProductEditView/>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type viewModels:CatalogViewModel}">
+                    <pages:CatalogView/>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type viewModels:ConsignmentsViewModel}">
+                    <pages:ConsignmentsView/>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type viewModels:ConsignmentCreateViewModel}">
+                    <pages:ConsignmentCreateView/>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type viewModels:PlaceOrderViewModel}">
+                    <pages:PlaceOrderView/>
+                </DataTemplate>
+            </ContentControl.Resources>
+        </ContentControl>
     </Grid>
 
 </Window>

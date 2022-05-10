@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace TobaccoCompanyWPF.ViewModels.MVVM
 {
-    internal sealed class Command : ICommand
+    public class Command : ICommand
     {
         private readonly Action<object?> _action;
         private readonly Func<object?, bool>? _canExecute;

@@ -1,26 +1,31 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TobaccoCompanyWPF.Models.Entity;
+using TobaccoCompanyWPF.ViewModels.Services;
 
 namespace TobaccoCompanyWPF.Models
 {
     internal class TobaccoCompanyContext : DbContext
     {
-        public static string DbConnStr = "";
+        public static string DbConnStr = ConfigurationService.ConnectionString;
 
         public DbSet<User> Users => Set<User>();
         public DbSet<Role> Roles => Set<Role>();
         public DbSet<Order> Orders => Set<Order>();
         public DbSet<Product> Products => Set<Product>();
         public DbSet<Consignment> Consignments => Set<Consignment>();
-        public DbSet<Courier> Couriers => Set<Courier>();
         public DbSet<CashReceipt> CashReceipts => Set<CashReceipt>();
         public DbSet<Invoice> Invoices => Set<Invoice>();
 
-        public TobaccoCompanyContext()
+        public TobaccoCompanyContext(bool create = true, bool delete = false)
         {
-#warning В будущем удалить
-            //Database.EnsureDeleted();
-            Database.EnsureCreated();
+            if (delete)
+            {
+                Database.EnsureDeleted();
+            }
+            if (create)
+            {
+                Database.EnsureCreated();
+            }
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

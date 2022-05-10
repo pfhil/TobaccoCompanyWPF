@@ -9,11 +9,11 @@ namespace TobaccoCompanyWPF.Views.Windows
     /// </summary>
     public partial class RegistrationWindow : Window
     {
-        public RegistrationWindow(LoginPresenter loginPresenter)
+        public RegistrationWindow(LoginViewModel loginPresenter)
         {
             InitializeComponent();
 
-            var registrationPresenter = new RegistrationPresenter(loginPresenter)
+            var registrationPresenter = new RegistrationViewModel(loginPresenter)
             {
                 MinimizeWindowAction = () => SystemCommands.MinimizeWindow(this),
                 CloseWindowAction = () => SystemCommands.CloseWindow(this),
@@ -37,7 +37,7 @@ namespace TobaccoCompanyWPF.Views.Windows
         {
             if (this.DataContext != null)
             {
-                ((RegistrationPresenter)this.DataContext).User.Password = ((PasswordBox)sender).Password;
+                ((RegistrationViewModel)this.DataContext).Password = ((PasswordBox)sender).Password;
             }
         }
     }

@@ -14,7 +14,7 @@ namespace TobaccoCompanyWPF.Views.Windows
         public LoginWindow()
         {
             InitializeComponent();
-            var loginPresenter = new LoginPresenter()
+            var loginPresenter = new LoginViewModel()
             {
                 OpenWindowAction = () => this.Show(),
                 HideWindowAction = () => this.Hide(),
@@ -58,11 +58,6 @@ namespace TobaccoCompanyWPF.Views.Windows
                 errorMessageBorder.Visibility = Visibility.Collapsed;
                 errorMessageTextBlock.Text = string.Empty;
             }
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            TobaccoCompanyContext.DbConnStr = this.DbConnStr.Text;
         }
     }
 }

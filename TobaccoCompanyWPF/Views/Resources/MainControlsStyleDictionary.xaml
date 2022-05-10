@@ -3,48 +3,45 @@
                     xmlns:controls="clr-namespace:TobaccoCompanyWPF.Views.Controls"
                     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
     <Style TargetType="TextBox" BasedOn="{StaticResource MaterialDesignTextBox}">
-        <!--<Setter Property="materialDesign:ValidationAssist.UsePopup" Value="True" />-->
-        <!--<Setter Property="Cursor" Value="Arrow"/>-->
         <Setter Property="materialDesign:TextFieldAssist.UnderlineBrush" Value="#FF23B1A6"/>
-        <Setter Property="Padding" Value="6"/>
-        <Setter Property="Margin" Value="0,0,0,10"/>
         <Setter Property="materialDesign:ValidationAssist.Background" Value="Transparent"/>
         <Setter Property="materialDesign:TextFieldAssist.DecorationVisibility" Value="Hidden"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="materialDesign:TextFieldAssist.TextFieldCornerRadius" Value="10"/>
-        <Setter Property="HorizontalContentAlignment" Value="Left"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <!--Подумать над видом курсора при зажатой кнопке мыши-->
-        <!--<Style.Triggers>
-                <EventTrigger RoutedEvent="MouseLeftButtonDown">
-                    
-                </EventTrigger>
-            </Style.Triggers>-->
+    </Style>
+
+    <Style x:Key="ListViewItemCenter" TargetType="ListViewItem" BasedOn="{StaticResource MaterialDesignGridViewItem}">
+        <!--<Setter Property="VerticalAlignment" Value="Stretch"/>-->
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <!--<Setter Property="HorizontalAlignment" Value="Stretch"/>-->
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="GridViewColumnHeaderAllCenter" TargetType="GridViewColumnHeader" BasedOn="{StaticResource {x:Type GridViewColumnHeader}}">
+        <Setter Property="Padding" Value="7,10,7,10"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
     </Style>
 
     <Style TargetType="PasswordBox" BasedOn="{StaticResource MaterialDesignPasswordBox}">
-        <!--<Setter Property="materialDesign:ValidationAssist.UsePopup" Value="True" />-->
-        <!--<Setter Property="Cursor" Value="Arrow"/>-->
         <Setter Property="materialDesign:TextFieldAssist.UnderlineBrush" Value="#FF23B1A6"/>
-        <Setter Property="Padding" Value="6"/>
-        <Setter Property="Margin" Value="0,0,0,10"/>
         <Setter Property="materialDesign:ValidationAssist.Background" Value="Transparent"/>
         <Setter Property="materialDesign:TextFieldAssist.DecorationVisibility" Value="Hidden"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="materialDesign:TextFieldAssist.TextFieldCornerRadius" Value="10"/>
-        <Setter Property="HorizontalContentAlignment" Value="Left"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
     </Style>
 
+    <Style x:Key="OneFieldStackPanel" TargetType="StackPanel">
+        <Setter Property="Margin" Value="0,0,0,10" />
+    </Style>
+    
     <Style TargetType="DatePicker" BasedOn="{StaticResource MaterialDesignOutlinedDatePicker}">
         <Setter Property="materialDesign:TextFieldAssist.UnderlineBrush" Value="#FF23B1A6"/>
-        <Setter Property="Padding" Value="6"/>
-        <Setter Property="Margin" Value="0,0,0,10"/>
         <Setter Property="materialDesign:ValidationAssist.Background" Value="Transparent"/>
         <Setter Property="materialDesign:TextFieldAssist.DecorationVisibility" Value="Hidden"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="materialDesign:TextFieldAssist.TextFieldCornerRadius" Value="10"/>
-        <Setter Property="HorizontalContentAlignment" Value="Left"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
     </Style>
 
@@ -62,7 +59,7 @@
         </Style.Resources>
     </Style>
 
-    <Style x:Key="ActionButton" TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatButton}">
+    <Style x:Key="ActionButton" TargetType="Button" BasedOn="{StaticResource MaterialDesignOutlinedButton}">
         <Setter Property="FontSize" Value="16"/>
         <Setter Property="Height" Value="36"/>
     </Style>

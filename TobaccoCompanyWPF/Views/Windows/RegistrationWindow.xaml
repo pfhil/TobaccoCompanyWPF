@@ -7,13 +7,14 @@
         xmlns:viewModels="clr-namespace:TobaccoCompanyWPF.ViewModels"
         xmlns:controls="clr-namespace:TobaccoCompanyWPF.Views.Controls"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:myAssistants="clr-namespace:TobaccoCompanyWPF.Views.Assistants"
         mc:Ignorable="d"
         Title="RegistrationWindow"
         AllowsTransparency="True" WindowStyle="None" Background="Transparent"
         ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
         MouseDown="Window_MouseDown"
-        Template="{StaticResource LoginTemplate}"
-        d:DataContext="{d:DesignInstance Type=viewModels:LoginPresenter}"
+        Template="{StaticResource RegistrationTemplate}"
+        d:DataContext="{d:DesignInstance Type=viewModels:LoginViewModel}"
         FontSize="16"
         Height="600"
         Width="400">
@@ -38,25 +39,39 @@
             <RowDefinition Height="0.5*"></RowDefinition>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" MaxWidth="500">
-            <Label Target="{Binding ElementName=loginTextBox}" Content="Логин"/>
-            <TextBox  Name="loginTextBox"
-                      Cursor="Arrow"
-                      Text="{Binding User.Login, UpdateSourceTrigger=LostFocus, ValidatesOnDataErrors=True}">
-            </TextBox>
-            <Label Target="{Binding ElementName=passwordBox}" Content="Пароль"/>
-            <PasswordBox Name="passwordBox" PasswordChanged="passwordBox_PasswordChanged"/>
 
-            <Label Target="{Binding ElementName=passwordBoxConfirm}" Content="Подтверждение пароля"/>
-            <PasswordBox Name="passwordBoxConfirm"/>
+            <StackPanel Style="{StaticResource OneFieldStackPanel}">
+                <Label Target="{Binding ElementName=loginTextBox}" Content="Логин"/>
+                <TextBox Padding="6" Name="loginTextBox"
+                      Text="{Binding Login, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" Cursor="Arrow" >
+                </TextBox>
+            </StackPanel>
 
-            <Label Target="{Binding ElementName=nameTextBox}" Content="Имя"/>
-            <TextBox  Name="nameTextBox"
-                      Cursor="Arrow"
-                      Text="{Binding User.Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
-            </TextBox>
+            <StackPanel Style="{StaticResource OneFieldStackPanel}">
+                <Label Target="{Binding ElementName=passwordBox}" Content="Пароль"/>
+                <PasswordBox Padding="6" Name="passwordBox" 
+                         myAssistants:PasswordBoxAssistant.BindPassword="True"
+                         myAssistants:PasswordBoxAssistant.BoundPassword="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
+            </StackPanel>
 
-            <Label Target="{Binding ElementName=DateBirth}" Content="Дата рождения"/>
-            <DatePicker DisplayDateStart="01.01.1850" materialDesign:TextFieldAssist.UnderlineBrush="#FF23B1A6" Padding="6" BorderThickness="1" Name="DateBirth" SelectedDate="{Binding User.DateBirth, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"></DatePicker>
+            <StackPanel Style="{StaticResource OneFieldStackPanel}">
+                <Label Target="{Binding ElementName=passwordBoxConfirm}" Content="Подтверждение пароля"/>
+                <PasswordBox Padding="6" Name="passwordBoxConfirm"
+                         myAssistants:PasswordBoxAssistant.BindPassword="True"
+                         myAssistants:PasswordBoxAssistant.BoundPassword="{Binding ConfirmPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
+            </StackPanel>
+
+            <StackPanel Style="{StaticResource OneFieldStackPanel}">
+                <Label Target="{Binding ElementName=nameTextBox}" Content="Имя"/>
+                <TextBox Padding="6" Name="nameTextBox"
+                      Text="{Binding Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" >
+                </TextBox>
+            </StackPanel>
+
+            <StackPanel Style="{StaticResource OneFieldStackPanel}">
+                <Label Target="{Binding ElementName=datePickerDateBirth}" Content="Дата рождения"/>
+                <DatePicker DisplayDateStart="01.01.1900" Padding="6" Name="datePickerDateBirth" SelectedDate="{Binding DateBirth, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"/>
+            </StackPanel>
         </StackPanel>
 
         <Grid Grid.Row="3" Grid.Column="1" MaxWidth="500" >
@@ -65,7 +80,7 @@
                 <ColumnDefinition Width="0.2*" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <Button Name="loginButton" Command="{Binding TryRegistrationCommand}" Grid.Column="0" Content="Создать">
+            <Button Name="loginButton" Command="{Binding TryRegistrationCommand}" Grid.Column="0" Content="Создать" Cursor="Hand">
                 <Button.Resources>
                     <Style TargetType="Button" BasedOn="{StaticResource ActionButton}">
                         <Setter Property="IsEnabled" Value="False"/>
@@ -73,8 +88,10 @@
                             <MultiDataTrigger>
                                 <MultiDataTrigger.Conditions>
                                     <Condition Binding="{Binding Path=(Validation.HasError), ElementName=loginTextBox}" Value="False"/>
-                                    <Condition Binding="{Binding Path=(Validation.HasError), ElementName=DateBirth}" Value="False"/>
+                                    <Condition Binding="{Binding Path=(Validation.HasError), ElementName=passwordBox}" Value="False"/>
+                                    <Condition Binding="{Binding Path=(Validation.HasError), ElementName=passwordBoxConfirm}" Value="False"/>
                                     <Condition Binding="{Binding Path=(Validation.HasError), ElementName=nameTextBox}" Value="False"/>
+                                    <Condition Binding="{Binding Path=(Validation.HasError), ElementName=datePickerDateBirth}" Value="False"/>
                                 </MultiDataTrigger.Conditions>
                                 <Setter Property="IsEnabled" Value="True"/>
                             </MultiDataTrigger>
