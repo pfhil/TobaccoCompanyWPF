@@ -16,7 +16,7 @@ namespace TobaccoCompanyWPF.Models
         public DbSet<CashReceipt> CashReceipts => Set<CashReceipt>();
         public DbSet<Invoice> Invoices => Set<Invoice>();
 
-        public TobaccoCompanyContext(bool create = true, bool delete = false)
+        public TobaccoCompanyContext(bool create = false, bool delete = false)
         {
             if (delete)
             {

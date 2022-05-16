@@ -9,12 +9,10 @@ using TobaccoCompanyWPF.ViewModels.ValidationAttributes;
 
 namespace TobaccoCompanyWPF.ViewModels
 {
-    public class UserOrdersViewModel : BaseViewModel
+    public class ManagerOrdersViewModel : BaseViewModel
     {
-        public UserOrdersViewModel(CurrentPrincipal currentPrincipal)
+        public ManagerOrdersViewModel()
         {
-            this.CurrentPrincipal=currentPrincipal;
-
             this.GetProductCommand = new AsyncCommand<object>(async orderObject =>
             {
                 await this.DoActionWithLoadingAsync(() =>
@@ -22,7 +20,7 @@ namespace TobaccoCompanyWPF.ViewModels
                     using TobaccoCompanyContext context = new TobaccoCompanyContext();
                     var order = context.Orders.First(order => order.Id == (orderObject as OrderViewModel).Id);
 
-                    order.UserMarkProductIsReceived = !order.UserMarkProductIsReceived;
+                    order.ManagerMarkProductIsReceived = !order.ManagerMarkProductIsReceived;
                     context.Orders.Update(order);
                     context.SaveChanges();
                 });
@@ -35,13 +33,27 @@ namespace TobaccoCompanyWPF.ViewModels
                     using TobaccoCompanyContext context = new TobaccoCompanyContext();
                     var order = context.Orders.First(order => order.Id == (orderObject as OrderViewModel).Id);
 
-                    order.UserMarkIsPaid = !order.UserMarkIsPaid;
+                    order.ManagerMarkIsPaid = !order.ManagerMarkIsPaid;
                     context.Orders.Update(order);
                     context.SaveChanges();
                 });
             });
-        }
 
+            this.CloseOrderCommand = new AsyncCommand<object>(async orderObject =>
+            {
+                await this.DoActionWithLoadingAsync(() =>
+                {
+                    using TobaccoCompanyContext context = new TobaccoCompanyContext();
+                    var order = context.Orders.First(order => order.Id == (orderObject as OrderViewModel).Id);
+
+                    order.OrderState = OrderState.Close;
+                    context.Orders.Update(order);
+                    context.SaveChanges();
+                });
+
+                (orderObject as OrderViewModel).State = OrderState.Close;
+            });
+        }
         private async Task LoadDataAsync()
         {
             await this.DoActionWithLoadingAsync(() =>
@@ -49,9 +61,9 @@ namespace TobaccoCompanyWPF.ViewModels
                 using TobaccoCompanyContext context = new TobaccoCompanyContext();
 
                 var orders = context.Orders
-                        .Where(order => order.Client.Id == this.CurrentPrincipal.User.Id)
                         .Include(order => order.CashReceipts)
                         .ThenInclude(cashReceipt => cashReceipt.Product)
+                        .Include(order => order.Client)
                         .ToList();
 
                 var tempOrders = new ObservableCollection<OrderViewModel>();
@@ -65,10 +77,8 @@ namespace TobaccoCompanyWPF.ViewModels
         public ObservableCollection<OrderViewModel> Orders { get; set; }
 
         public IAsyncCommand LoadDataCommand => new AsyncCommand(() => LoadDataAsync());
-
-        public CurrentPrincipal CurrentPrincipal { get; }
-
         public ICommand GetProductCommand { get; }
         public ICommand PayProductCommand { get; }
+        public ICommand CloseOrderCommand { get; }
     }
 }

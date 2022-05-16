@@ -8,11 +8,14 @@
         
         xmlns:pages="clr-namespace:TobaccoCompanyWPF.Views.Pages"
         
-        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:enums="clr-namespace:TobaccoCompanyWPF.Models.Entity"
+        xmlns:converters="clr-namespace:TobaccoCompanyWPF.Views.Converters"
         xmlns:viewModels="clr-namespace:TobaccoCompanyWPF.ViewModels"
         xmlns:controls="clr-namespace:TobaccoCompanyWPF.Views.Controls"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        
         d:DataContext="{d:DesignInstance Type=viewModels:MainViewModel}"
         
         Template="{StaticResource mainWindowTemplate}"
@@ -36,7 +39,7 @@
                 </Style>
             </Style.Resources>
         </Style>
-        <!--<local:RoleToVisibilityConverter x:Key="RoleToVisibilityConverter"/>-->
+        <converters:RoleToVisibilityConverter x:Key="RoleToVisibilityConverter"/>
     </Window.Resources>
 
     <Grid>
@@ -48,13 +51,13 @@
         <TreeView Grid.Column="0" Background="#a7ccc6">
             <TreeViewItem>
 
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="Selected">
-                        <i:InvokeCommandAction
+                <behaviors:Interaction.Triggers>
+                    <behaviors:EventTrigger EventName="Selected">
+                        <behaviors:InvokeCommandAction
                                 Command="{Binding NavigateCatalogCommand}">
-                        </i:InvokeCommandAction>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
+                        </behaviors:InvokeCommandAction>
+                    </behaviors:EventTrigger>
+                </behaviors:Interaction.Triggers>
 
                 <TreeViewItem.Header>
                     <StackPanel Orientation="Horizontal">
@@ -63,19 +66,22 @@
                     </StackPanel>
                 </TreeViewItem.Header>
             </TreeViewItem>
-            <TreeViewItem>
+            <TreeViewItem Visibility="{Binding CurrentUser, Converter={StaticResource RoleToVisibilityConverter}, ConverterParameter=Manager}">
                 <TreeViewItem.Header>
-                    Продукция
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Database" Width="20" Height="20" />
+                        <TextBlock Text="Продукция"></TextBlock>
+                    </StackPanel>
                 </TreeViewItem.Header>
                 <TreeViewItem>
 
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="Selected">
-                            <i:InvokeCommandAction
+                    <behaviors:Interaction.Triggers>
+                        <behaviors:EventTrigger EventName="Selected">
+                            <behaviors:InvokeCommandAction
                                 Command="{Binding NavigateConsignmentsCommand}">
-                            </i:InvokeCommandAction>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
+                            </behaviors:InvokeCommandAction>
+                        </behaviors:EventTrigger>
+                    </behaviors:Interaction.Triggers>
 
                     <TreeViewItem.Header>
                         <StackPanel Orientation="Horizontal">
@@ -86,13 +92,13 @@
                 </TreeViewItem>
                 <TreeViewItem>
 
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="Selected">
-                            <i:InvokeCommandAction
+                    <behaviors:Interaction.Triggers>
+                        <behaviors:EventTrigger EventName="Selected">
+                            <behaviors:InvokeCommandAction
                                 Command="{Binding NavigateProductsCommand}">
-                            </i:InvokeCommandAction>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
+                            </behaviors:InvokeCommandAction>
+                        </behaviors:EventTrigger>
+                    </behaviors:Interaction.Triggers>
 
                     <TreeViewItem.Header>
                         <StackPanel Orientation="Horizontal">
@@ -101,26 +107,108 @@
                         </StackPanel>
                     </TreeViewItem.Header>
                 </TreeViewItem>
-                <!--Visibility="{Binding Source={x:Static Threading:Thread.CurrentPrincipal}, Converter={StaticResource RoleToVisibilityConverter}, ConverterParameter=Administrator}"-->
             </TreeViewItem>
-            <TreeViewItem Header="Заказы">
+            <TreeViewItem>
+
+                <TreeViewItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="OrderBoolAscending" Width="20" Height="20" />
+                        <TextBlock Text="Заказы"></TextBlock>
+                    </StackPanel>
+                </TreeViewItem.Header>
+
                 <TreeViewItem Header="Оформить заказ">
 
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="Selected">
-                            <i:InvokeCommandAction
+                    <behaviors:Interaction.Triggers>
+                        <behaviors:EventTrigger EventName="Selected">
+                            <behaviors:InvokeCommandAction
                                 Command="{Binding NavigatePlaceOrderCommand}">
-                            </i:InvokeCommandAction>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
+                            </behaviors:InvokeCommandAction>
+                        </behaviors:EventTrigger>
+                    </behaviors:Interaction.Triggers>
 
                 </TreeViewItem>
-                <TreeViewItem Header="Мои заказы" />
-                <TreeViewItem Header="Все заказы" />
+                <TreeViewItem Header="Мои заказы">
+
+                    <behaviors:Interaction.Triggers>
+                        <behaviors:EventTrigger EventName="Selected">
+                            <behaviors:InvokeCommandAction
+                                Command="{Binding NavigateUserOrdersCommand}">
+                            </behaviors:InvokeCommandAction>
+                        </behaviors:EventTrigger>
+                    </behaviors:Interaction.Triggers>
+
+                </TreeViewItem>
+                <TreeViewItem Visibility="{Binding CurrentUser, Converter={StaticResource RoleToVisibilityConverter}, ConverterParameter=Manager}" Header="Все заказы">
+                    
+                    <behaviors:Interaction.Triggers>
+                        <behaviors:EventTrigger EventName="Selected">
+                            <behaviors:InvokeCommandAction
+                                Command="{Binding NavigateManagerOrdersCommand}">
+                            </behaviors:InvokeCommandAction>
+                        </behaviors:EventTrigger>
+                    </behaviors:Interaction.Triggers>
+                    
+                </TreeViewItem>
             </TreeViewItem>
-            <TreeViewItem Header="Аккаунт">
-                <TreeViewItem Header="Редактировать" />
-                <TreeViewItem Header="Выход" />
+            <TreeViewItem>
+                <TreeViewItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Account" Width="20" Height="20" />
+                        <TextBlock Text="Аккаунт"></TextBlock>
+                    </StackPanel>
+                </TreeViewItem.Header>
+                <TreeViewItem>
+
+                    <behaviors:Interaction.Triggers>
+                        <behaviors:EventTrigger EventName="Selected">
+                            <behaviors:InvokeCommandAction
+                                Command="{Binding NavigateUserEditCommand}">
+                            </behaviors:InvokeCommandAction>
+                        </behaviors:EventTrigger>
+                    </behaviors:Interaction.Triggers>
+
+                    <TreeViewItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="AccountEdit" Width="20" Height="20" />
+                            <TextBlock Text="Изменить"></TextBlock>
+                        </StackPanel>
+                    </TreeViewItem.Header>
+                </TreeViewItem>
+                <TreeViewItem Visibility="{Binding CurrentUser, Converter={StaticResource RoleToVisibilityConverter}, ConverterParameter=Admin}">
+
+                    <behaviors:Interaction.Triggers>
+                        <behaviors:EventTrigger EventName="Selected">
+                            <behaviors:InvokeCommandAction
+                                Command="{Binding NavigateAdminViewCommand}">
+                            </behaviors:InvokeCommandAction>
+                        </behaviors:EventTrigger>
+                    </behaviors:Interaction.Triggers>
+
+                    <TreeViewItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Administrator" Width="20" Height="20" />
+                            <TextBlock Text="Администрирование"></TextBlock>
+                        </StackPanel>
+                    </TreeViewItem.Header>
+                </TreeViewItem>
+                <TreeViewItem>
+
+                    <behaviors:Interaction.Triggers>
+                        <behaviors:EventTrigger EventName="Selected">
+                            <behaviors:InvokeCommandAction
+                                Command="{Binding LogOutCommand}">
+                            </behaviors:InvokeCommandAction>
+                        </behaviors:EventTrigger>
+                    </behaviors:Interaction.Triggers>
+
+                    <TreeViewItem.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Logout" Width="20" Height="20" />
+                            <TextBlock Text="Выйти"></TextBlock>
+                        </StackPanel>
+                    </TreeViewItem.Header>
+                </TreeViewItem>
             </TreeViewItem>
         </TreeView>
         <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3"
@@ -154,6 +242,22 @@
 
                 <DataTemplate DataType="{x:Type viewModels:PlaceOrderViewModel}">
                     <pages:PlaceOrderView/>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type viewModels:UserOrdersViewModel}">
+                    <pages:UserOrdersView/>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type viewModels:ManagerOrdersViewModel}">
+                    <pages:ManagerOrdersView/>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type viewModels:AdminViewModel}">
+                    <pages:AdminView/>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type viewModels:UserEditViewModel}">
+                    <pages:UserEditView/>
                 </DataTemplate>
             </ContentControl.Resources>
         </ContentControl>

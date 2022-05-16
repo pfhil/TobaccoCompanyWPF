@@ -69,7 +69,7 @@
                     </Style>
                 </Button.Resources>
             </Button>
-            <Button Command="{Binding RestoreDataBaseCommand}" Margin="0,10,0,10" Style="{StaticResource ActionButton}">Пересоздать базу данных</Button>
+            <Button Command="{Binding RestoreDataBaseCommand}" Margin="0,10,0,10" Style="{StaticResource ActionButton}">Создать базу данных</Button>
             <Button Command="{Binding CloseWindowCommand}" Margin="0,10,0,10" Style="{StaticResource ActionButton}">Закрыть настройки</Button>
         </StackPanel>
 

@@ -19,7 +19,7 @@ namespace TobaccoCompanyWPF.Views.Windows
                 OpenWindowAction = () => this.Show(),
                 HideWindowAction = () => this.Hide(),
                 MinimizeWindowAction = () => SystemCommands.MinimizeWindow(this),
-                CloseWindowAction = () => SystemCommands.CloseWindow(this),
+                CloseWindowAction = _ => SystemCommands.CloseWindow(this),
                 ShowErrorMessageAction = text =>
                 {
                     this.errorMessageBorder.Visibility = Visibility.Visible;
@@ -28,6 +28,13 @@ namespace TobaccoCompanyWPF.Views.Windows
             };
             this.DataContext = loginPresenter;
 
+        }
+
+        public new void Show()
+        {
+            this.passwordBox.Clear();
+            this.loginTextBox.Clear();
+            base.Show();
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)

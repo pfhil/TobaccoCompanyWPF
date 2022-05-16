@@ -6,8 +6,7 @@
     <ControlTemplate x:Key="LoginTemplate" TargetType="Window">
         <Border Name="newBorder" CornerRadius="10">
             <Border.Background>
-                <!--<ImageBrush ImageSource="{Binding BackGroundImage}"></ImageBrush>-->
-                <SolidColorBrush Color="White"/>
+                <ImageBrush ImageSource="{Binding BackGroundImage}"></ImageBrush>
             </Border.Background>
             <materialDesign:DialogHost IsOpen="{Binding DialogHostLoadingIsOpen}" x:Name="mainDialogHost">
                 <Grid>
@@ -56,8 +55,7 @@
     <ControlTemplate x:Key="RegistrationTemplate" TargetType="Window">
         <Border Name="newBorder" CornerRadius="10">
             <Border.Background>
-                <!--<ImageBrush ImageSource="{Binding BackGroundImage}"></ImageBrush>-->
-                <SolidColorBrush Color="White"/>
+                <ImageBrush ImageSource="{Binding BackGroundImage}"></ImageBrush>
             </Border.Background>
             <materialDesign:DialogHost IsOpen="{Binding DialogHostLoadingIsOpen}" x:Name="mainDialogHost">
                 <Grid>
@@ -105,8 +103,7 @@
     <ControlTemplate x:Key="mainWindowTemplate" TargetType="Window">
         <Border Name="newBorder" CornerRadius="10">
             <Border.Background>
-                <!--<ImageBrush ImageSource="{Binding BackGroundImage}"></ImageBrush>-->
-                <SolidColorBrush Color="White"/>
+                <ImageBrush ImageSource="{Binding BackGroundImage}"></ImageBrush>
             </Border.Background>
             <Grid>
                 <Grid.RowDefinitions>
@@ -119,6 +116,11 @@
                         <ColumnDefinition Width="auto"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
 
+                    <StackPanel Margin="120,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
+                        <TextBlock FontFamily="{StaticResource MaterialDesignFont}" FontSize="25">Tobacco Company</TextBlock>
+                        <materialDesign:PackIcon Kind="SmokingPipe" Width="30" Height="30"/>
+                    </StackPanel>
+                    
                     <StackPanel Grid.Column="1" Orientation="Horizontal">
                         <controls:IconButton Command="{Binding MinimizeWindowCommand}" Icon="{materialDesign:PackIcon WindowMinimize}"/>
                         <controls:IconButton Command="{Binding CloseWindowCommand}" Icon="{materialDesign:PackIcon WindowClose}"/>
@@ -140,7 +142,10 @@
             
             <materialDesign:DialogHost IsOpen="{Binding DialogHostQuestionIsOpen}" x:Name="questionDialogHost">
 
-                <Border Background="AntiqueWhite" Padding="20">
+                <Border Padding="20">
+                    <Border.Background>
+                        <ImageBrush ImageSource="{Binding BackGroundImage}"></ImageBrush>
+                    </Border.Background>
                     <AdornerDecorator>
                         <ContentPresenter />
                     </AdornerDecorator>

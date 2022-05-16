@@ -170,6 +170,7 @@
                             <MultiDataTrigger.Conditions>
                                 <Condition Binding="{Binding Path=(Validation.HasError), ElementName=addressTextBox}" Value="False"/>
                                 <Condition Binding="{Binding Path=(Validation.HasError), ElementName=dateDeliveryDatePicker}" Value="False"/>
+                                <Condition Binding="{Binding ElementName=userCartList, Path=HasItems}" Value="True"/>
                             </MultiDataTrigger.Conditions>
                             <Setter Property="IsEnabled" Value="True"/>
                         </MultiDataTrigger>

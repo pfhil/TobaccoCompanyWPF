@@ -15,9 +15,13 @@ namespace TobaccoCompanyWPF.ViewModels
         private ReceivingMethod receivingMethod;
         private DateTime dateDelivery = DateTime.Now.AddDays(2);
 
-        public PlaceOrderViewModel(CurrentPrincipal currentPrincipal)
+        public PlaceOrderViewModel(CurrentPrincipal currentPrincipal, NavigationStore navigationStore)
         {
             this.CurrentPrincipal=currentPrincipal;
+
+            var navigationService = new NavigationService<UserOrdersViewModel>(
+                navigationStore,
+                () => new UserOrdersViewModel(currentPrincipal));
 
             this.PlaceOrderCommand = new AsyncCommand(async () =>
             {
@@ -46,6 +50,7 @@ namespace TobaccoCompanyWPF.ViewModels
                             PaymentType = this.PaymentType,
                             ReceivingMethod = this.ReceivingMethod,
                             CashReceipts = cashReceipts,
+                            OrderState = OrderState.Open,
                         };
 
                         context.Orders.Add(order);
@@ -53,8 +58,18 @@ namespace TobaccoCompanyWPF.ViewModels
                     });
                     this.CurrentPrincipal.UserCart.ProductStack.Clear();
                     this.UserCart?.Clear();
+                    navigationService.Navigate();
                 }
             });
+
+            this.DeleteProductCommand = new Command(objProduct =>
+            {
+                var productStackTemp = objProduct as ProductStackViewModel;
+
+                this.UserCart.Remove(productStackTemp);
+                CurrentPrincipal.UserCart.ProductStack.Remove(CurrentPrincipal.UserCart.ProductStack.First(productStack => productStack.product.Id == productStackTemp.Id)!);
+            });
+
             this.AddProductToCartCommand = new Command(productobj => this.addProduct(productobj));
             this.RemoveProductFromCartCommand = new Command(productobj => this.RemoveProduct(productobj));
         }

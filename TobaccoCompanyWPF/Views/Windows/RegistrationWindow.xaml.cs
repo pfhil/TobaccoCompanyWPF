@@ -16,7 +16,7 @@ namespace TobaccoCompanyWPF.Views.Windows
             var registrationPresenter = new RegistrationViewModel(loginPresenter)
             {
                 MinimizeWindowAction = () => SystemCommands.MinimizeWindow(this),
-                CloseWindowAction = () => SystemCommands.CloseWindow(this),
+                CloseWindowAction = _ => SystemCommands.CloseWindow(this),
                 ShowErrorMessageAction = text =>
                 {
                     this.errorMessageBorder.Visibility = Visibility.Visible;

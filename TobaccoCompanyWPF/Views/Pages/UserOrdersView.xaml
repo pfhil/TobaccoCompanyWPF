@@ -13,12 +13,98 @@
              xmlns:controls="clr-namespace:TobaccoCompanyWPF.Views.Controls"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-             d:DataContext="{d:DesignInstance Type=viewModels:PlaceOrderViewModel}"
+             d:DataContext="{d:DesignInstance Type=viewModels:UserOrdersViewModel}"
              
              Template="{StaticResource viewsTemplate}"
              
              d:DesignHeight="450" d:DesignWidth="800" FontSize="16">
+
+    <behaviors:Interaction.Triggers>
+        <behaviors:EventTrigger EventName="Loaded">
+            <behaviors:InvokeCommandAction Command="{Binding LoadDataCommand}"/>
+        </behaviors:EventTrigger>
+    </behaviors:Interaction.Triggers>
+
+    <UserControl.Resources>
+        <converters:EnumToStringConverter x:Key="EnumToStringConverter"/>
+        <Style x:Key="stateEnableCheckBox" TargetType="CheckBox" BasedOn="{StaticResource MaterialDesignActionCheckBox}">
+            <Setter Property="IsEnabled" Value="True"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding State}" Value="{x:Static enums:OrderState.Close}">
+                    <Setter Property="IsEnabled" Value="False"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
     <Grid>
-            
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Label Content="Ваши заказы"/>
+
+        <ListView FontSize="16" Name="ordersListView" ItemsSource="{Binding Orders}" ItemContainerStyle="{StaticResource ListViewItemCenter}" Grid.Row="1">
+            <ListView.View>
+                <GridView ColumnHeaderContainerStyle="{StaticResource GridViewColumnHeaderAllCenter}">
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Id}">Id</GridViewColumn>
+                    <GridViewColumn Header="Детали заказа">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <ListView Margin="0" Padding="0" ItemsSource="{Binding CashReceipts}">
+                                    <ListView.ItemContainerStyle>
+                                        <Style TargetType="ListViewItem" BasedOn="{StaticResource ListViewItemCenter}">
+                                            <Setter Property="Focusable" Value="False"/>
+                                        </Style>
+                                    </ListView.ItemContainerStyle>
+                                    <ListView.View>
+                                        <GridView>
+                                            <GridView.ColumnHeaderContainerStyle>
+                                                <Style TargetType="{x:Type GridViewColumnHeader}">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                </Style>
+                                            </GridView.ColumnHeaderContainerStyle>
+                                            <GridViewColumn DisplayMemberBinding="{Binding Path=Product.Name}"/>
+                                            <GridViewColumn DisplayMemberBinding="{Binding Path=Amount, StringFormat={}{0}}"/>
+                                        </GridView>
+                                    </ListView.View>
+                                </ListView>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Дата доставки" DisplayMemberBinding="{Binding DateReceived, TargetNullValue=Самовывоз}"/>
+                    <GridViewColumn Header="Адрес доставки" DisplayMemberBinding="{Binding Address, TargetNullValue=Самовывоз}"/>
+                    <GridViewColumn Header="Заказ получен">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox Command="{Binding ElementName=ordersListView, Path=DataContext.GetProductCommand}"
+                                          IsChecked="{Binding UserMarkProductIsReceived}"
+                                          Style="{StaticResource stateEnableCheckBox}"
+                                          CommandParameter="{Binding}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Заказ оплачен">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox Command="{Binding ElementName=ordersListView, Path=DataContext.PayProductCommand}"
+                                          IsChecked="{Binding UserMarkIsPaid}"
+                                          Style="{StaticResource stateEnableCheckBox}"
+                                          CommandParameter="{Binding}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Цена" DisplayMemberBinding="{Binding SumPrice}"/>
+                    <GridViewColumn Header="Статус">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding State, Converter={StaticResource EnumToStringConverter}}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        
     </Grid>
 </UserControl>

@@ -38,6 +38,19 @@ namespace TobaccoCompanyWPF.ViewModels
             }
         }
 
+        [Required(ErrorMessage = "Телефонный номер - обязательное поле")]
+        [Phone(ErrorMessage = "Вводимое значение должно быть телефонным номером")]
+        public string Phone 
+        {
+            get => this.User.Phone;
+            set
+            {
+                this.User.Phone = value;
+                OnPropertyChanged();
+                ValidateProperty(value);
+            }
+        }
+
         [Required(ErrorMessage = "Пароль - обязательное поле")]
         [MinLength(8, ErrorMessage = "Минимальная длинна пароля - 8 символов")]
         public string Password 
@@ -140,14 +153,14 @@ namespace TobaccoCompanyWPF.ViewModels
                     context.SaveChanges();
                 });
 
-                CloseWindowAction?.Invoke();
+                CloseWindowAction?.Invoke(null);
                 LoginPresenter.OpenWindowAction?.Invoke();
             }
         }
 
         public new ICommand CloseWindowCommand => new Command(_ =>
         {
-            CloseWindowAction?.Invoke();
+            CloseWindowAction?.Invoke(null);
             LoginPresenter.OpenWindowAction?.Invoke();
         });
     }

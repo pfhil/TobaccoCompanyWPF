@@ -39,13 +39,14 @@
         <StackPanel MaxWidth="320" Orientation="Vertical" Grid.Row="1" Grid.Column="1">
             <StackPanel Style="{StaticResource OneFieldStackPanel}">
                 <Label Target="{Binding ElementName=nameTextBox}" Content="Название"/>
-                <TextBox  Name="nameTextBox"
+                <TextBox Padding="6" Name="nameTextBox"
                       Text="{Binding Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" Cursor="Arrow"/>
             </StackPanel>
 
             <StackPanel Style="{StaticResource OneFieldStackPanel}">
                 <Label Target="{Binding ElementName=descriptionTextBox}" Content="Описание"/>
                 <TextBox VerticalContentAlignment="Top"
+                         Padding="6"
                      Name="descriptionTextBox"
                      Height="60"
                      AcceptsReturn="True" TextWrapping="Wrap"
@@ -63,7 +64,7 @@
                     <ColumnDefinition/>
                     <ColumnDefinition Width="0.4*"/>
                 </Grid.ColumnDefinitions>
-                <TextBox Name="pathToImageTextBox" materialDesign:TextFieldAssist.HasClearButton="True" Grid.Column="0" IsReadOnly="True" Margin="0,0,0,0" 
+                <TextBox Name="pathToImageTextBox" materialDesign:TextFieldAssist.HasClearButton="True" Grid.Column="0" IsReadOnly="True" Margin="0,0,0,0" Padding="6"
                          Text="{Binding PathToImage, UpdateSourceTrigger=PropertyChanged}"/>
                 <Button Margin="5,0,0,0"  Command="{Binding ChoiceImageFile}" Style="{StaticResource ActionButton}" Grid.Column="1">Обзор</Button>
             </Grid>

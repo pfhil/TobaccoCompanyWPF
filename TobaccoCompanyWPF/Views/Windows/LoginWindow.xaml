@@ -45,14 +45,14 @@
             
             <StackPanel Style="{StaticResource OneFieldStackPanel}">
                 <Label Target="{Binding ElementName=loginTextBox}" Content="Логин"/>
-                <TextBox Padding="6"  Name="loginTextBox"
+                <TextBox TextChanged="loginTextBox_TextChanged" Padding="6"  Name="loginTextBox"
                       Text="{Binding User.Login, UpdateSourceTrigger=PropertyChanged}"
                       Cursor="Arrow"/>
             </StackPanel>
 
             <StackPanel Style="{StaticResource OneFieldStackPanel}">
                 <Label Target="{Binding ElementName=passwordBox}" Content="Пароль"/>
-                <PasswordBox Padding="6" Name="passwordBox" 
+                <PasswordBox PasswordChanged="passwordBox_PasswordChanged" Padding="6" Name="passwordBox" 
                          myAssistants:PasswordBoxAssistant.BindPassword="True"
                          myAssistants:PasswordBoxAssistant.BoundPassword="{Binding User.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
             </StackPanel>

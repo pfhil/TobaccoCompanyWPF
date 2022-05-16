@@ -10,6 +10,8 @@
 
         public string Name { get; set; }
 
+        public string Phone { get; set; }
+
         public DateTime DateBirth { get; set; } = new DateTime(2000, 1, 1);
 
         public List<Role> Roles { get; set; } = new();

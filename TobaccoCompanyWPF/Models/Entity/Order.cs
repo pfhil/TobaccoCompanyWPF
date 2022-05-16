@@ -32,6 +32,8 @@ namespace TobaccoCompanyWPF.Models.Entity
 
         public ReceivingMethod ReceivingMethod { get; set; }
 
+        public OrderState OrderState { get; set; }
+
         public List<Product> Products { get; set; } = new();
 
         public List<CashReceipt> CashReceipts { get; set; } = new();
@@ -52,5 +54,13 @@ namespace TobaccoCompanyWPF.Models.Entity
         Delivery,
         [Description("Самовывоз")]
         Pickup
+    }
+
+    public enum OrderState
+    {
+        [Description("Открыт")]
+        Open,
+        [Description("Закрыт")]
+        Close
     }
 }

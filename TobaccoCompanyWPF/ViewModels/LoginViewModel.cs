@@ -48,7 +48,7 @@ namespace TobaccoCompanyWPF.ViewModels
                 loginSucccess = await DoActionWithLoadingAsync(() =>
                 {
                     using var context = new TobaccoCompanyContext();
-                    User? user = context.Users.FirstOrDefault(user => user.Login == this.User.Login);
+                    User? user = context.Users.Include(us => us.Roles).FirstOrDefault(user => user.Login == this.User.Login);
                     if (user != null)
                     {
                         var passwordHasher = new PasswordHasher<User>();
@@ -74,7 +74,6 @@ namespace TobaccoCompanyWPF.ViewModels
             {
                 ShowErrorMessageAction?.Invoke("Неверное имя аккаунта или пароль. Пожалуйста, проверьте их и повторите попытку.");
             }
-#warning Приложение не завершает работу при закрытии mainWindow
             else
             {
                 this.HideWindowAction?.Invoke();
@@ -82,13 +81,21 @@ namespace TobaccoCompanyWPF.ViewModels
 
                 NavigationStore navigationStore = new NavigationStore();
                 var mainWindow = new MainWindow();
-                var maindWindowViewModel = new MainViewModel(navigationStore, currentPrincipal)
+                var maindWindowViewModel = new MainViewModel(navigationStore, currentPrincipal, this)
                 {
                     OpenWindowAction = () => mainWindow.Show(),
                     HideWindowAction = () => mainWindow.Hide(),
                     MinimizeWindowAction = () => SystemCommands.MinimizeWindow(mainWindow),
-                    CloseWindowAction = () => System.Environment.Exit(0),
-                    //CloseWindowAction = () => SystemCommands.CloseWindow(mainWindow),
+                    CloseWindowAction = shutDown => 
+                    {
+                        if (shutDown.HasValue && shutDown.Value)
+                            System.Environment.Exit(0);
+                        else
+                        {
+                            SystemCommands.CloseWindow(mainWindow);
+                            this.OpenWindowAction?.Invoke();
+                        }
+                    },
                 };
                 mainWindow.DataContext = maindWindowViewModel;
                 mainWindow.Show();
