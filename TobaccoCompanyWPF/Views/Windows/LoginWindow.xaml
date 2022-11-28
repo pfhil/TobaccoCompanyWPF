@@ -1,0 +1,90 @@
+﻿<Window x:Class="TobaccoCompanyWPF.Views.Windows.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TobaccoCompanyWPF.Views.Windows"
+        xmlns:viewModels="clr-namespace:TobaccoCompanyWPF.ViewModels"
+        xmlns:controls="clr-namespace:TobaccoCompanyWPF.Views.Controls"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:myAssistants="clr-namespace:TobaccoCompanyWPF.Views.Assistants"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=viewModels:LoginViewModel}"
+        AllowsTransparency="True" WindowStyle="None" Background="Transparent"
+        ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
+        MouseDown="Window_MouseDown"
+        Title="LoginWindow"
+        Template="{StaticResource LoginTemplate}"
+        FontSize="16"
+        Height="600"
+        Width="400">
+    <Window.Resources>
+
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="6*"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <!--top border-->
+            <RowDefinition Height="0.3*"></RowDefinition>
+            <!--Логин и пароль-->
+            <RowDefinition Height="auto"></RowDefinition>
+            <!--textbox/button spliter-->
+            <RowDefinition Height="0.1*"></RowDefinition>
+            <!--Кнопки-->
+            <RowDefinition Height="auto"></RowDefinition>
+            <!--ErrorMessage-->
+            <RowDefinition Height="auto"></RowDefinition>
+            <!--bottom border-->
+            <RowDefinition Height="0.5*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" MaxWidth="500">
+            
+            <StackPanel Style="{StaticResource OneFieldStackPanel}">
+                <Label Target="{Binding ElementName=loginTextBox}" Content="Логин"/>
+                <TextBox TextChanged="loginTextBox_TextChanged" Padding="6"  Name="loginTextBox"
+                      Text="{Binding User.Login, UpdateSourceTrigger=PropertyChanged}"
+                      Cursor="Arrow"/>
+            </StackPanel>
+
+            <StackPanel Style="{StaticResource OneFieldStackPanel}">
+                <Label Target="{Binding ElementName=passwordBox}" Content="Пароль"/>
+                <PasswordBox PasswordChanged="passwordBox_PasswordChanged" Padding="6" Name="passwordBox" 
+                         myAssistants:PasswordBoxAssistant.BindPassword="True"
+                         myAssistants:PasswordBoxAssistant.BoundPassword="{Binding User.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+            </StackPanel>
+            
+        </StackPanel>
+
+        <Grid Grid.Row="3" Grid.Column="1" MaxWidth="500" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="0.2*" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Button Name="loginButton" Command="{Binding TryLoginCommand}" Grid.Column="0" Content="Войти" Cursor="Hand">
+                <Button.Resources>
+                    <Style TargetType="Button" BasedOn="{StaticResource ActionButton}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding User.Login}" Value="">
+                                <Setter Property="IsEnabled" Value="False"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding User.Password}" Value="">
+                                <Setter Property="IsEnabled" Value="False"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Resources>
+            </Button>
+            <Button Style="{StaticResource ActionButton}" Name="registrationButton" Command="{Binding OpenRegistrationWindowCommand}" Grid.Column="2" Content="Регистрация"></Button>
+        </Grid>
+
+        <Border Visibility="Collapsed" Name="errorMessageBorder" Grid.Row="4" Grid.Column="1" Style="{StaticResource erorrMessageBorder}">
+            <TextBlock Name="errorMessageTextBlock"/>
+        </Border>
+
+    </Grid>
+</Window>

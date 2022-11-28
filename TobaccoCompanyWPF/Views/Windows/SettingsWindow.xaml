@@ -1,0 +1,81 @@
+﻿<Window x:Class="TobaccoCompanyWPF.Views.Windows.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TobaccoCompanyWPF.Views.Windows"
+        xmlns:viewModels="clr-namespace:TobaccoCompanyWPF.ViewModels"
+        xmlns:controls="clr-namespace:TobaccoCompanyWPF.Views.Controls"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:myAssistants="clr-namespace:TobaccoCompanyWPF.Views.Assistants"
+        mc:Ignorable="d"
+        Title="SettingsWindow"
+        d:DataContext="{d:DesignInstance Type=viewModels:LoginViewModel}"
+        AllowsTransparency="True" WindowStyle="None" Background="White"
+        ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
+        MouseDown="Window_MouseDown"
+        Template="{StaticResource RegistrationTemplate}"
+        FontSize="16"
+        Height="600"
+        Width="400">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="6*"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <!--top border-->
+            <RowDefinition Height="0.1*"></RowDefinition>
+            <!--Логин и пароль-->
+            <RowDefinition Height="auto"></RowDefinition>
+            <!--textbox/button spliter-->
+            <RowDefinition Height="1*"></RowDefinition>
+            <!--Кнопки-->
+            <RowDefinition Height="auto"></RowDefinition>
+            <!--ErrorMessage-->
+            <RowDefinition Height="auto"></RowDefinition>
+            <!--bottom border-->
+            <RowDefinition Height="0.5*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1" MaxWidth="500">
+            <Label Content="Строка подключения к базе данных"/>
+            <TextBox Text="{Binding ConnectionString, UpdateSourceTrigger=PropertyChanged}"/>
+            <CheckBox IsChecked="{Binding UseOnlyServerName}" Content="Использовать только имя сервера"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Vertical" Grid.Row="3" Grid.Column="1" MaxWidth="500" >
+            <Button Command="{Binding TryConnectionCommand}" Margin="0,10,0,10" Content="Проверить подлкючение">
+                <Button.Resources>
+                    <Style TargetType="Button" BasedOn="{StaticResource ActionButton}">
+                        <Setter Property="IsEnabled" Value="True"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ConnectionString}" Value="">
+                                <Setter Property="IsEnabled" Value="False"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Resources>
+            </Button>
+            <Button Command="{Binding SaveConnectionStringCommand}" Margin="0,10,0,10" Content="Сохранить настройки">
+                <Button.Resources>
+                    <Style TargetType="Button" BasedOn="{StaticResource ActionButton}">
+                        <Setter Property="IsEnabled" Value="True"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ConnectionString}" Value="">
+                                <Setter Property="IsEnabled" Value="False"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Resources>
+            </Button>
+            <Button Command="{Binding RestoreDataBaseCommand}" Margin="0,10,0,10" Style="{StaticResource ActionButton}">Создать базу данных</Button>
+            <Button Command="{Binding CloseWindowCommand}" Margin="0,10,0,10" Style="{StaticResource ActionButton}">Закрыть настройки</Button>
+        </StackPanel>
+
+        <Border Visibility="Collapsed" Name="errorMessageBorder" Grid.Row="4" Grid.Column="1" Style="{StaticResource erorrMessageBorder}">
+            <TextBlock Name="errorMessageTextBlock"/>
+        </Border>
+
+    </Grid>
+</Window>

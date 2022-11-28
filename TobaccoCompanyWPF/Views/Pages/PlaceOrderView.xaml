@@ -1,0 +1,183 @@
+﻿<UserControl x:Class="TobaccoCompanyWPF.Views.Pages.PlaceOrderView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TobaccoCompanyWPF.Views.Pages"
+             mc:Ignorable="d" 
+             
+             xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:enums="clr-namespace:TobaccoCompanyWPF.Models.Entity"
+             xmlns:converters="clr-namespace:TobaccoCompanyWPF.Views.Converters"
+             xmlns:viewModels="clr-namespace:TobaccoCompanyWPF.ViewModels"
+             xmlns:controls="clr-namespace:TobaccoCompanyWPF.Views.Controls"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             d:DataContext="{d:DesignInstance Type=viewModels:PlaceOrderViewModel}"
+             
+             Template="{StaticResource viewsTemplate}"
+             
+             d:DesignHeight="450" d:DesignWidth="800" FontSize="16">
+
+    <behaviors:Interaction.Triggers>
+        <behaviors:EventTrigger EventName="Loaded">
+            <behaviors:InvokeCommandAction Command="{Binding LoadDataCommand}"/>
+        </behaviors:EventTrigger>
+    </behaviors:Interaction.Triggers>
+
+    <UserControl.Resources>
+        <converters:EnumToCollectionConverter x:Key="EnumToCollectionConverter"/>
+        <Style x:Key="deliveryStackPanel" TargetType="StackPanel">
+            <Setter Property="Visibility" Value="Collapsed"/>
+
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=receivingMethodComboBox, Path=SelectedValue}" Value="{x:Static enums:ReceivingMethod.Delivery}">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+            </Style.Triggers>
+
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="0.2*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Margin="20,0,20,0" Orientation="Vertical" MaxWidth="200">
+
+            <StackPanel Style="{StaticResource OneFieldStackPanel}">
+                <Label Target="{Binding ElementName=receivingMethodComboBox}" Content="Способ получения товара"/>
+                <ComboBox Padding="6" Name="receivingMethodComboBox" 
+                          ItemsSource="{Binding Path=ReceivingMethod, Converter={StaticResource EnumToCollectionConverter}, Mode=OneTime}"
+                          SelectedValuePath="Value"
+                          DisplayMemberPath="Description"
+                          SelectedValue="{Binding Path=ReceivingMethod}"/>
+            </StackPanel>
+
+            <StackPanel Style="{StaticResource OneFieldStackPanel}">
+                <Label Target="{Binding ElementName=paymentTypeComboBox}" Content="Тип оплаты"/>
+                <ComboBox Padding="6" Name="paymentTypeComboBox"
+                          ItemsSource="{Binding Path=PaymentType, Converter={StaticResource EnumToCollectionConverter}, Mode=OneTime}"
+                          SelectedValuePath="Value"
+                          DisplayMemberPath="Description"
+                          SelectedValue="{Binding Path=PaymentType}"/>
+            </StackPanel>
+
+            <StackPanel x:Name="deliveryStackPanel" Style="{StaticResource deliveryStackPanel}">
+
+                <StackPanel Style="{StaticResource OneFieldStackPanel}">
+                    <Label Target="{Binding ElementName=addressTextBox}" Content="Адрес доставки"/>
+                    <TextBox Padding="6" Name="addressTextBox"
+                      Text="{Binding AddressDelivery, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" Cursor="Arrow"/>
+                </StackPanel>
+
+                <StackPanel Style="{StaticResource OneFieldStackPanel}">
+                    <Label Content="Дата доставки"/>
+                    <DatePicker Name="dateDeliveryDatePicker" SelectedDate="{Binding DateDelivery, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" Padding="6"/>
+                </StackPanel>
+            </StackPanel>
+
+        </StackPanel>
+
+        <Grid Margin="20,0,20,0" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            
+            <Label Grid.Row="0" Target="{Binding ElementName=userCartList}" Content="Ваша корзина"/>
+            <ListView Grid.Row="1" ItemsSource="{Binding UserCart}" ItemContainerStyle="{StaticResource ListViewItemCenter}" Name="userCartList" FontSize="16">
+
+                <ListView.View>
+                    <GridView ColumnHeaderContainerStyle="{StaticResource GridViewColumnHeaderAllCenter}">
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=Name}">Название</GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=Price}">Цена</GridViewColumn>
+                        <GridViewColumn Header="Действия">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <controls:IconButton Background="Red" Foreground="AntiqueWhite" Icon="{materialDesign:PackIcon Kind=Trash}"
+                                                             Command="{Binding ElementName=userCartList, Path=DataContext.DeleteProductCommand}" CommandParameter="{Binding}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Количество">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border Width="90" CornerRadius="10" BorderThickness="1" BorderBrush="Gray">
+                                        <DockPanel Width="auto">
+                                            <Button
+                                                DockPanel.Dock="Left"
+                                                Command="{Binding ElementName=userCartList, Path=DataContext.RemoveProductFromCartCommand}"
+                                                CommandParameter="{Binding}"
+                                                Content="-" Cursor="Hand">
+
+                                                <Button.Resources>
+                                                    <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatButton}">
+                                                        <Setter Property="IsEnabled" Value="True"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding AmountTaken}" Value="1">
+                                                                <Setter Property="IsEnabled" Value="False"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Button.Resources>
+
+                                            </Button>
+                                            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Stretch" TextAlignment="Center" Text="{Binding AmountTaken}"/>
+                                            <Button 
+                                                DockPanel.Dock="Right"
+                                                Command="{Binding ElementName=userCartList, Path=DataContext.AddProductToCartCommand}"
+                                                CommandParameter="{Binding}"
+                                                Content="+">
+                                                <Button.Resources>
+                                                    <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatButton}">
+                                                        <Setter Property="IsEnabled" Value="True"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding BuyingStateString}" Value="Was Taken and no more Available">
+                                                                <Setter Property="IsEnabled" Value="False"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Button.Resources>
+                                            </Button>
+                                        </DockPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+
+            </ListView>
+
+        </Grid>
+
+        <Button MaxWidth="250" Grid.Row="2" Grid.Column="1" Content="Заказать" 
+                Command="{Binding PlaceOrderCommand}" Cursor="Hand">
+            <Button.Resources>
+                <Style TargetType="Button" BasedOn="{StaticResource ActionButton}">
+                    <Setter Property="IsEnabled" Value="False"/>
+                    <Style.Triggers>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding Path=(Validation.HasError), ElementName=addressTextBox}" Value="False"/>
+                                <Condition Binding="{Binding Path=(Validation.HasError), ElementName=dateDeliveryDatePicker}" Value="False"/>
+                                <Condition Binding="{Binding ElementName=userCartList, Path=HasItems}" Value="True"/>
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="IsEnabled" Value="True"/>
+                        </MultiDataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Resources>
+        </Button>
+
+    </Grid>
+</UserControl>

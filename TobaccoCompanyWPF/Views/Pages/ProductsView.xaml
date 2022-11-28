@@ -1,0 +1,61 @@
+﻿<UserControl x:Class="TobaccoCompanyWPF.Views.Pages.ProductsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:TobaccoCompanyWPF.Views.Pages"
+             mc:Ignorable="d"
+             
+             xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:viewModels="clr-namespace:TobaccoCompanyWPF.ViewModels"
+             xmlns:controls="clr-namespace:TobaccoCompanyWPF.Views.Controls"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             d:DataContext="{d:DesignInstance Type=viewModels:ProductsViewModel}"
+             
+             Template="{StaticResource viewsTemplate}"
+             
+             d:DesignHeight="450" d:DesignWidth="800" FontSize="16">
+    <UserControl.Resources>
+        <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignOutlinedButton}">
+            <Setter Property="Width" Value="190"/>
+            <Setter Property="Margin" Value="10"/>
+        </Style>
+    </UserControl.Resources>
+
+    <behaviors:Interaction.Triggers>
+        <behaviors:EventTrigger EventName="Loaded">
+            <behaviors:InvokeCommandAction Command="{Binding LoadDataCommand}"/>
+        </behaviors:EventTrigger>
+    </behaviors:Interaction.Triggers>
+
+    <DockPanel>
+        <Button Command="{Binding OpenCreateProductViewCommand}" HorizontalAlignment="Right" DockPanel.Dock="Top" Cursor="Hand">
+            Добавить
+        </Button>
+        <ListView Name="productList" ItemContainerStyle="{StaticResource ListViewItemCenter}" FontSize="16" ItemsSource="{Binding EditProducts}">
+
+            <ListView.View>
+                <GridView ColumnHeaderContainerStyle="{StaticResource GridViewColumnHeaderAllCenter}">
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Id}">Id</GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Name}">Название</GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Description}">Описание</GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=Price}">Цена</GridViewColumn>
+                    <GridViewColumn Header="Действия">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <controls:IconButton Background="Red" Foreground="AntiqueWhite" Icon="{materialDesign:PackIcon Kind=Trash}"
+                                                             Command="{Binding ElementName=productList, Path=DataContext.DeleteProductCommand}" CommandParameter="{Binding}"/>
+                                    <controls:IconButton Background="Orange" Foreground="AntiqueWhite" Icon="{materialDesign:PackIcon Kind=Edit}" 
+                                                             Command="{Binding ElementName=productList, Path=DataContext.EditProductCommand}" CommandParameter="{Binding}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </DockPanel>
+    
+</UserControl>
